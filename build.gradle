@@ -1,0 +1,38 @@
+group 'com.gamliela'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'io.spring.gradle:dependency-management-plugin:0.5.4.RELEASE'
+    }
+}
+
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom 'com.amazonaws:aws-java-sdk-bom:1.10.47'
+    }
+}
+
+dependencies {
+    compile 'com.amazonaws:aws-java-sdk-s3'
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": "com.gamliela.aws.s3.signurl.Cli"
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
